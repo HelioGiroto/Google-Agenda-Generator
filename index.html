@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agendar evento</title>
+    <style>
+        body {
+            display: flex;
+            flex-flow: column;
+            align-items: center;
+            background: #fcf9b3;
+        }
+        
+        h2{
+            text-align: center;
+        }
+
+        fieldset {
+            width: 40%;
+        }
+
+        .form {
+            padding: 10px;
+            background: white;
+        }
+
+        label {
+            color: red;
+        }
+
+        input {
+            width: 98%;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        #box {
+            width: 15px;
+        }
+
+        button {
+            background: yellow;
+            width: 98%;
+            padding: 10px;
+            font-size: 1.3em;
+            font-weight: bold;
+        }
+
+        .ate {
+            font-size: 1.2em;
+            color: black;
+        }
+
+        .ocultar {
+            display: none;
+        }
+
+        @media(max-width: 900px) {
+            fieldset {
+                width: 50%;
+            }
+        }
+
+        @media(max-width: 500px) {
+            fieldset {
+                width: 80%;
+            }
+            
+            button{
+                font-size: 1.1em;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+    <h2>GOOGLE AGENDA GENERATOR</h2>
+    <fieldset>
+        <legend>Novo Evento/Compromisso</legend>
+        <div class="form">
+
+            <label>TÍTULO: </label><br>
+            <input id="titulo" type="text" /> <br />
+
+            <label>DATA INÍCIO: </label><br>
+            <input id="diaInicio" type="date" /> <br />
+
+            <label>HORA INÍCIO: </label><br>
+            <input id="horaInicio" type="time" /> <br />
+
+            <input type="checkbox" id="box">
+            <label class="ate"> ATÉ ...</label><br>
+
+            <label class='ocultar'>DATA FIM: </label>
+            <input id="diaFim" class='ocultar' type="date" /> <br class='ocultar'>
+
+            <label class='ocultar'>HORA FIM: </label>
+            <input id="horaFim" class='ocultar' type="time" /> <br class='ocultar'>
+
+            <label>LOCAL: </label><br>
+            <input id="local" type="text" /> <br />
+
+            <label>DESCRIÇÃO: </label><br>
+            <input id="descricao" type="text" /> <br><br>
+
+            <button id='bt'>GERAR COMPROMISSO</button>
+        </div>
+    </fieldset>
+    <script>
+        // Será preciso que o usuário esteja "logado" no Google Agenda
+
+        let ocultado = document.querySelectorAll('.ocultar')
+        let box = document.querySelector('#box')
+        box.addEventListener('click', () => {
+            ocultado.forEach(a => a.style.display = 'block')
+        })
+
+        let bt = document.querySelector("#bt");
+
+        bt.addEventListener("click", () => {
+            let titulo = document.querySelector("#titulo").value;
+            let diaInicio = document.querySelector("#diaInicio").value;
+            let horaInicio = document.querySelector("#horaInicio").value;
+            let diaFim = document.querySelector("#diaFim").value;
+            let horaFim = document.querySelector("#horaFim").value;
+            let local = document.querySelector("#local").value;
+            let descricao = document.querySelector("#descricao").value;
+
+            // todas as variáveis se substitui o espaço por "+" e etc..
+            titulo = titulo.replace(" ", "+").replace(/&/g, '-');
+            local = local.replace(" ", "+").replace(/&/g, '-');
+            descricao = descricao.replace(" ", "+").replace(/&/, '-');
+            diaInicio = diaInicio.replace(/-/g, "");
+            diaFim = diaFim.replace(/-/g, "");
+            horaInicio = horaInicio.replace(/:/g, "");
+            horaFim = horaFim.replace(/:/g, "");
+
+            // variaveis manipuladas
+            let dataInicio = `${diaInicio}T${horaInicio}`;
+            let dataFim = `${diaFim}T${horaFim}`;
+
+            let link = `https://calendar.google.com/event?action=TEMPLATE&text=${titulo}&dates=${dataInicio}/${dataFim}&location=${local}&details=${descricao}`;
+
+            if (diaFim == '') {
+                link = `https://calendar.google.com/event?action=TEMPLATE&text=${titulo}&dates=${dataInicio}&location=${local}&details=${descricao}`;
+            }
+
+            console.log(link);
+            window.open(link);
+        });
+
+    </script>
+
+</body>
+
+</html>
